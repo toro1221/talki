@@ -35,6 +35,7 @@ dependencies = [
   "evdev>=1.6; sys_platform == 'linux'",
   "pynput>=1.7; sys_platform != 'linux'",
   "pyobjc-framework-Quartz>=9.0; sys_platform == 'darwin'",
+  "pyobjc-framework-CoreFoundation>=9.0; sys_platform == 'darwin'",
 ]
 
 [project.scripts]
