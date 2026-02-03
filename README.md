@@ -46,8 +46,14 @@ Config file locations:
 ## Platform notes
 
 Linux:
-- Permissions: global hotkeys and kernel-level keyboard injection require access to `/dev/input/*`.
-  Add your user to the `input` group: `sudo usermod -aG input $USER` (then log out/in).
+- Permissions: Talki needs read access to `/dev/input/event*` (global hotkeys + suppression) and write access to `/dev/uinput` (injection).
+  - Load the uinput module: `sudo modprobe uinput`
+  - Add your user to the `input` group: `sudo usermod -aG input $USER`
+  - Create a udev rule (most distros): `sudo tee /etc/udev/rules.d/99-talki.rules >/dev/null <<'EOF'\nKERNEL==\"uinput\", MODE=\"0660\", GROUP=\"input\"\nSUBSYSTEM==\"input\", KERNEL==\"event*\", MODE=\"0660\", GROUP=\"input\"\nEOF`
+  - Reload rules: `sudo udevadm control --reload-rules && sudo udevadm trigger`
+  - Log out/in (or reboot) for group membership to apply.
+  - Verify: `ls -l /dev/uinput /dev/input/event*` (look for `crw-rw----` and group `input`).
+  - If your distro uses a dedicated `uinput` group, change `GROUP="input"` to `GROUP="uinput"` in the rule and run `sudo usermod -aG uinput $USER`.
 - Hotkey suppression: uses `evdev` device grabs and re-emits all keys except the configured hotkeys.
 - Injection:
   - Default: direct typing via uinput keypress events (US layout mapping for punctuation)
