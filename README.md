@@ -18,6 +18,7 @@ From source (recommended while developing):
 Then run:
 
 - `python -m talki`
+  - or, after `pip install -e .`, just `talki`
 
 ## Usage
 
